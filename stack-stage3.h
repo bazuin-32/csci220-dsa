@@ -40,6 +40,8 @@ class stack {
     T* _data;
     std::size_t _size = 0; // number of elements currently in the stack
     std::size_t _capacity = 1; // maximum number of elements the stack can hold
+    
+    void _deep_copy(const stack<T>& other); // helper function for deep copying
 };
 
 /***
@@ -56,17 +58,7 @@ inline stack<T>::stack() {
 
 template<typename T>
 inline stack<T>::stack(const stack<T>& other) {
-    // copy size and capacity
-    _size = other._size;
-    _capacity = other._capacity;
-    
-    // allocate new array for the copied data
-    _data = new T[_capacity];
-    
-    // copy the elements from the other stack
-    for (std::size_t i = 0; i < _size; i++) {
-        _data[i] = other._data[i];
-    }
+    _deep_copy(other);
 }
 
 template<typename T>
@@ -84,17 +76,24 @@ inline stack<T>& stack<T>::operator=(const stack<T>& other) {
     // deallocate current array
     delete[] _data;
 
-    // copy size, capacity, and allocate new array
+    _deep_copy(other);
+    
+    return *this;
+}
+
+template<typename T>
+inline void stack<T>::_deep_copy(const stack<T>& other) {
+    // copy size and capacity
     _size = other._size;
     _capacity = other._capacity;
+    
+    // allocate new array for the copied data
     _data = new T[_capacity];
-
+    
     // copy the elements from the other stack
     for (std::size_t i = 0; i < _size; i++) {
         _data[i] = other._data[i];
     }
-    
-    return *this;
 }
 
 template<typename T>
