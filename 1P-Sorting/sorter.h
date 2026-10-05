@@ -15,7 +15,6 @@
 #ifndef _SORTER_H
 #define _SORTER_H
 
-#include <limits>
 #include <string>
 #include <cstddef>
 #include <vector>
@@ -61,17 +60,19 @@ void sorter(std::vector<T> &items, std::size_t k) {
 	ssize_t sorted_index = items.size() - 1;
 	while (sorted_index >= 0) {
 		// find the max element from each subarray
-		T max = subarrays[0].size() ? subarrays[0].back() : std::numeric_limits<T>::lowest();
-		std::size_t max_index = 0;
-		for (std::size_t i = 1; i < k; i++) { // we already checked i = 0
-			if (subarrays[i].size() && subarrays[i].back() > max) {
-				max = subarrays[i].back();
+		std::size_t max_index = k; // k is an invalid index, used to indicate that no max has been found yet
+		for (std::size_t i = 0; i < k; i++) {
+			if (subarrays[i].empty()) {
+				continue;
+			}
+
+			if (max_index == k || subarrays[i].back() > subarrays[max_index].back()) {
 				max_index = i;
 			}
 		}
 		
 		// put the max element into the sorted array
-		items[sorted_index] = max;
+		items[sorted_index] = subarrays[max_index].back();
 		sorted_index--;
 
 		// remove the element from the subarray
